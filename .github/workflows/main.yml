@@ -1,0 +1,8 @@
+pipeline {
+    agent any
+     stage(" execute Ansible") {
+           steps {
+                ansiblePlaybook credentialsId: '172.31.43.99', disableHostKeyChecking: true, installation: 'Ansible', playbook: 'ansible.yml'
+            }    
+        }  
+    }
