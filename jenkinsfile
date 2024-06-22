@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Clone Repository') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Build Ansible') {
+            steps {
+                script {
+                    // Install Ansible dependencies (if needed)
+                    sh 'sudo apt update && sudo apt install -y python3 python3-pip'
+                    
+                    // Install Ansible using pip
+                    sh 'pip3 install ansible'
+                }
+            }
+        }
+        
+        stage('Test Ansible') {
+            steps {
+                script {
+                    // Run Ansible playbook syntax check or any other tests
+                    sh 'ansible-playbook --syntax-check playbook.yml'
+                }
+            }
+        }
+        
+        stage('Deploy Ansible') {
+            steps {
+                script {
+                    // Perform deployment tasks (e.g., run Ansible playbook)
+                    sh 'ansible-playbook playbook.yml'
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+        failure {
+            error 'Pipeline failed.'
+        }
+    }
+}
